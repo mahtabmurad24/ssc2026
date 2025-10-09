@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog'
 import { Facebook, MessageCircle, Phone } from 'lucide-react'
 
@@ -241,34 +241,36 @@ export default function Home() {
 
                     <div>
                       <Label htmlFor="class">Class *</Label>
-                      <Select value={formData.class} onValueChange={(value) => handleInputChange('class', value)}>
-                        <SelectTrigger className={errors.class ? 'border-red-500' : ''}>
-                          <SelectValue placeholder="Select class" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="6">Class 6</SelectItem>
-                          <SelectItem value="7">Class 7</SelectItem>
-                          <SelectItem value="8">Class 8</SelectItem>
-                          <SelectItem value="9">Class 9</SelectItem>
-                          <SelectItem value="10">Class 10</SelectItem>
-                        </SelectContent>
-                      </Select>
+                      <select
+                        id="class"
+                        value={formData.class}
+                        onChange={(e) => handleInputChange('class', e.target.value)}
+                        className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.class ? 'border-red-500' : 'border-gray-300'}`}
+                      >
+                        <option value="">Select class</option>
+                        <option value="6">Class 6</option>
+                        <option value="7">Class 7</option>
+                        <option value="8">Class 8</option>
+                        <option value="9">Class 9</option>
+                        <option value="10">Class 10</option>
+                      </select>
                       {errors.class && <p className="text-red-500 text-sm mt-1">{errors.class}</p>}
                     </div>
 
                     <div>
                       <Label htmlFor="section">Section *</Label>
-                      <Select value={formData.section} onValueChange={(value) => handleInputChange('section', value)}>
-                        <SelectTrigger className={errors.section ? 'border-red-500' : ''}>
-                          <SelectValue placeholder="Select section" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="Alpha">Alpha</SelectItem>
-                          <SelectItem value="Beta">Beta</SelectItem>
-                          <SelectItem value="Gamma">Gamma</SelectItem>
-                          <SelectItem value="Delta">Delta</SelectItem>
-                        </SelectContent>
-                      </Select>
+                      <select
+                        id="section"
+                        value={formData.section}
+                        onChange={(e) => handleInputChange('section', e.target.value)}
+                        className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.section ? 'border-red-500' : 'border-gray-300'}`}
+                      >
+                        <option value="">Select section</option>
+                        <option value="Alpha">Alpha</option>
+                        <option value="Omega">Omega</option>
+                        <option value="Sigma">Sigma</option>
+                        <option value="Delta">Delta</option>
+                      </select>
                       {errors.section && <p className="text-red-500 text-sm mt-1">{errors.section}</p>}
                     </div>
 
@@ -286,18 +288,18 @@ export default function Home() {
 
                     <div>
                       <Label htmlFor="size">Jersey Size *</Label>
-                      <Select value={formData.size} onValueChange={(value) => handleInputChange('size', value)}>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select size" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="S">Small (S)</SelectItem>
-                          <SelectItem value="M">Medium (M)</SelectItem>
-                          <SelectItem value="L">Large (L)</SelectItem>
-                          <SelectItem value="XL">Extra Large (XL)</SelectItem>
-                          <SelectItem value="XXL">Double Extra Large (XXL)</SelectItem>
-                        </SelectContent>
-                      </Select>
+                      <select
+                        id="size"
+                        value={formData.size}
+                        onChange={(e) => handleInputChange('size', e.target.value)}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      >
+                        <option value="S">Small (S)</option>
+                        <option value="M">Medium (M)</option>
+                        <option value="L">Large (L)</option>
+                        <option value="XL">Extra Large (XL)</option>
+                        <option value="XXL">Double Extra Large (XXL)</option>
+                      </select>
                     </div>
                   </div>
 
@@ -381,16 +383,17 @@ export default function Home() {
 
                           <div>
                             <Label htmlFor="location">Payment Location *</Label>
-                            <Select value={formData.location} onValueChange={(value) => handleInputChange('location', value)}>
-                              <SelectTrigger className={errors.location ? 'border-red-500' : ''}>
-                                <SelectValue placeholder="Select location" />
-                              </SelectTrigger>
-                              <SelectContent>
-                                <SelectItem value="School">School</SelectItem>
-                                <SelectItem value="Mosque">Mosque</SelectItem>
-                                <SelectItem value="Other">Other</SelectItem>
-                              </SelectContent>
-                            </Select>
+                            <select
+                              id="location"
+                              value={formData.location}
+                              onChange={(e) => handleInputChange('location', e.target.value)}
+                              className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.location ? 'border-red-500' : 'border-gray-300'}`}
+                            >
+                              <option value="">Select location</option>
+                              <option value="School">School</option>
+                              <option value="Mosque">Mosque</option>
+                              <option value="Other">Other</option>
+                            </select>
                             {errors.location && <p className="text-red-500 text-sm mt-1">{errors.location}</p>}
                           </div>
 

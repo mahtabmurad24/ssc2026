@@ -17,6 +17,7 @@ interface JerseyOrder {
   class: string
   section: string
   mobileNumber: string
+  size: string
   trxId: string
   paymentNumber: string
   status: string
@@ -256,6 +257,7 @@ export default function AdminPanel() {
                       <TableHead>Class</TableHead>
                       <TableHead>Section</TableHead>
                       <TableHead>Mobile</TableHead>
+                      <TableHead>Size</TableHead>
                       <TableHead>Transaction ID</TableHead>
                       <TableHead>Payment Number</TableHead>
 
@@ -271,6 +273,9 @@ export default function AdminPanel() {
                         <TableCell>{order.class}</TableCell>
                         <TableCell>{order.section}</TableCell>
                         <TableCell>{order.mobileNumber}</TableCell>
+                        <TableCell>
+                          <Badge variant="outline">{order.size}</Badge>
+                        </TableCell>
                         <TableCell>
                           <div className="flex items-center space-x-2">
                             <span className="font-mono text-sm">
