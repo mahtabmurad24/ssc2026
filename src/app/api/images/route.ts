@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
-import { writeFile } from 'fs/promises'
-import { join } from 'path'
-import { mkdirSync, existsSync } from 'fs'
+import { put } from '@vercel/blob'
 
 export async function GET(request: NextRequest) {
   try {
@@ -62,16 +60,11 @@ export async function POST(request: NextRequest) {
     const bytes = await file.arrayBuffer()
     const buffer = Buffer.from(bytes)
     const filename = `${Date.now()}-${file.name}`
-    const path = join(process.cwd(), 'public', 'uploads', filename)
 
-    // Create uploads directory if it doesn't exist
-    const uploadsDir = join(process.cwd(), 'public', 'uploads')
-    if (!existsSync(uploadsDir)) {
-      mkdirSync(uploadsDir, { recursive: true })
-    }
-
-    // Save file
-    await writeFile(path, buffer)
+    // Upload to Vercel Blob
+    const blob = await put(filename, buffer, {
+      access: 'public',
+    })
 
     // Get the highest order value
     const lastImage = await db.jerseyImage.findFirst({
@@ -82,7 +75,7 @@ export async function POST(request: NextRequest) {
     const image = await db.jerseyImage.create({
       data: {
         title,
-        imageUrl: `/uploads/${filename}`,
+        imageUrl: blob.url,
         imageType: imageType || 'jersey',
         order: (lastImage?.order || 0) + 1
       }
