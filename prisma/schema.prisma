@@ -1,0 +1,48 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model JerseyOrder {
+  id           String   @id @default(cuid())
+  name         String
+  jerseyName   String?
+  class        String
+  section      String
+  mobileNumber String
+  trxId        String?
+  paymentNumber String?
+  paymentMethod String?
+  location     String?
+  customLocation String?
+  kitVote      String?
+  status       String   @default("pending")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model JerseyImage {
+  id        String   @id @default(cuid())
+  title     String
+  imageUrl  String
+  imageType String   @default("jersey") // "jersey" or "fabric"
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model KitVote {
+  id        String   @id @default(cuid())
+  vote      String   // "blue" or "green"
+  createdAt DateTime @default(now())
+}
