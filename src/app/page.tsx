@@ -24,6 +24,7 @@ export default function Home() {
     class: '',
     section: '',
     mobileNumber: '',
+    size: 'M',
     trxId: '',
     paymentNumber: '',
     location: '',
@@ -116,6 +117,7 @@ export default function Home() {
           class: '',
           section: '',
           mobileNumber: '',
+          size: 'M',
           trxId: '',
           paymentNumber: '',
           location: '',
@@ -280,6 +282,22 @@ export default function Home() {
                         className={errors.mobileNumber ? 'border-red-500' : ''}
                       />
                       {errors.mobileNumber && <p className="text-red-500 text-sm mt-1">{errors.mobileNumber}</p>}
+                    </div>
+
+                    <div>
+                      <Label htmlFor="size">Jersey Size *</Label>
+                      <Select value={formData.size} onValueChange={(value) => handleInputChange('size', value)}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select size" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="S">Small (S)</SelectItem>
+                          <SelectItem value="M">Medium (M)</SelectItem>
+                          <SelectItem value="L">Large (L)</SelectItem>
+                          <SelectItem value="XL">Extra Large (XL)</SelectItem>
+                          <SelectItem value="XXL">Double Extra Large (XXL)</SelectItem>
+                        </SelectContent>
+                      </Select>
                     </div>
                   </div>
 

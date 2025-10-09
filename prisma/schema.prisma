@@ -20,6 +20,7 @@ model JerseyOrder {
   class        String
   section      String
   mobileNumber String
+  size         String   @default("M")
   trxId        String?
   paymentNumber String?
   paymentMethod String?
