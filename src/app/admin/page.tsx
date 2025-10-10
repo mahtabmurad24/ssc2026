@@ -9,7 +9,7 @@ import { Badge } from '@/components/ui/badge'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
-import { Upload, Copy, Eye, EyeOff } from 'lucide-react'
+import { Upload, Copy, Eye, EyeOff, Trash2 } from 'lucide-react'
 
 interface JerseyOrder {
   id: string
@@ -138,6 +138,22 @@ export default function AdminPanel() {
       }
     } catch (error) {
       console.error('Error updating order status:', error)
+    }
+  }
+
+  const deleteOrder = async (orderId: string) => {
+    if (!confirm('Are you sure you want to delete this order?')) return
+
+    try {
+      const response = await fetch(`/api/orders/${orderId}?password=M@ht@fadmin`, {
+        method: 'DELETE'
+      })
+
+      if (response.ok) {
+        await fetchOrders()
+      }
+    } catch (error) {
+      console.error('Error deleting order:', error)
     }
   }
 
@@ -343,14 +359,31 @@ export default function AdminPanel() {
                           {new Date(order.createdAt).toLocaleDateString()}
                         </TableCell>
                         <TableCell>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => copyToClipboard(order.trxId)}
-                          >
-                            <Copy className="h-4 w-4 mr-2" />
-                            Copy TRX ID
-                          </Button>
+                          <div className="flex space-x-2">
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => copyToClipboard(order.trxId)}
+                            >
+                              <Copy className="h-4 w-4 mr-2" />
+                              Copy TRX ID
+                            </Button>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => copyToClipboard(order.jerseyName || '')}
+                            >
+                              <Copy className="h-4 w-4 mr-2" />
+                              Copy Jersey Name
+                            </Button>
+                            <Button
+                              variant="destructive"
+                              size="sm"
+                              onClick={() => deleteOrder(order.id)}
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </div>
                         </TableCell>
                       </TableRow>
                     ))}

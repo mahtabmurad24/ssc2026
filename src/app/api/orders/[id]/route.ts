@@ -41,3 +41,33 @@ export async function PATCH(
     )
   }
 }
+
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  try {
+    const { searchParams } = new URL(request.url)
+    const adminPassword = searchParams.get('password')
+
+    // Check admin password
+    if (adminPassword !== 'M@ht@fadmin') {
+      return NextResponse.json(
+        { error: 'Unauthorized' },
+        { status: 401 }
+      )
+    }
+
+    await db.jerseyOrder.delete({
+      where: { id: params.id }
+    })
+
+    return NextResponse.json({ message: 'Order deleted successfully' })
+  } catch (error) {
+    console.error('Error deleting order:', error)
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 }
+    )
+  }
+}
