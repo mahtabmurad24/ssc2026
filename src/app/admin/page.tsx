@@ -14,6 +14,7 @@ import { Upload, Copy, Eye, EyeOff } from 'lucide-react'
 interface JerseyOrder {
   id: string
   name: string
+  jerseyName: string
   class: string
   section: string
   mobileNumber: string
@@ -254,6 +255,7 @@ export default function AdminPanel() {
                   <TableHeader>
                     <TableRow>
                       <TableHead>Name</TableHead>
+                      <TableHead>Jersey Name</TableHead>
                       <TableHead>Class</TableHead>
                       <TableHead>Section</TableHead>
                       <TableHead>Mobile</TableHead>
@@ -270,6 +272,7 @@ export default function AdminPanel() {
                     {filteredOrders.map((order) => (
                       <TableRow key={order.id}>
                         <TableCell className="font-medium">{order.name}</TableCell>
+                        <TableCell>{order.jerseyName || '-'}</TableCell>
                         <TableCell>{order.class}</TableCell>
                         <TableCell>{order.section}</TableCell>
                         <TableCell>{order.mobileNumber}</TableCell>
