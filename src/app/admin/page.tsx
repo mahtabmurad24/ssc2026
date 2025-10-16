@@ -9,7 +9,8 @@ import { Badge } from '@/components/ui/badge'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
-import { Upload, Copy, Eye, EyeOff, Trash2 } from 'lucide-react'
+import { Upload, Copy, Eye, EyeOff, Trash2, Download } from 'lucide-react'
+import jsPDF from 'jspdf'
 
 interface JerseyOrder {
   id: string
@@ -200,6 +201,105 @@ export default function AdminPanel() {
     }
   }
 
+  const downloadOrdersPDF = () => {
+    const doc = new jsPDF()
+
+    // Set background color for header
+    doc.setFillColor(240, 240, 240)
+    doc.rect(0, 0, 210, 30, 'F')
+
+    // Title
+    doc.setFontSize(24)
+    doc.setFont('helvetica', 'bold')
+    doc.setTextColor(0, 0, 0)
+    const title = 'Jersey Orders Report'
+    const titleWidth = doc.getTextWidth(title)
+    doc.text(title, (210 - titleWidth) / 2, 20)
+
+    // Subtitle
+    doc.setFontSize(12)
+    doc.setFont('helvetica', 'normal')
+    const subtitle = `Generated on ${new Date().toLocaleDateString()} - Total Orders: ${filteredOrders.length}`
+    const subtitleWidth = doc.getTextWidth(subtitle)
+    doc.text(subtitle, (210 - subtitleWidth) / 2, 28)
+
+    // Table headers
+    let yPosition = 45
+    doc.setFontSize(14)
+    doc.setFont('helvetica', 'bold')
+    doc.setTextColor(255, 255, 255)
+    doc.setFillColor(100, 100, 100)
+    doc.rect(10, yPosition - 5, 190, 10, 'F')
+    doc.text('Jersey Name', 15, yPosition + 2)
+    doc.text('Section', 85, yPosition + 2)
+    doc.text('Size', 155, yPosition + 2)
+
+    yPosition += 15
+
+    // Table rows
+    doc.setFontSize(12)
+    doc.setFont('helvetica', 'normal')
+    doc.setTextColor(0, 0, 0)
+
+    filteredOrders.forEach((order, index) => {
+      // Alternate row colors
+      if (index % 2 === 0) {
+        doc.setFillColor(250, 250, 250)
+        doc.rect(10, yPosition - 5, 190, 10, 'F')
+      }
+
+      doc.text(order.jerseyName || '-', 15, yPosition + 2)
+      doc.text(order.section, 85, yPosition + 2)
+      doc.text(order.size, 155, yPosition + 2)
+
+      // Draw row lines
+      doc.setDrawColor(200, 200, 200)
+      doc.line(10, yPosition + 5, 200, yPosition + 5)
+
+      yPosition += 10
+
+      // Add new page if needed
+      if (yPosition > 270) {
+        doc.addPage()
+        yPosition = 20
+        // Repeat header on new page
+        doc.setFillColor(240, 240, 240)
+        doc.rect(0, 0, 210, 30, 'F')
+        doc.setFontSize(24)
+        doc.setFont('helvetica', 'bold')
+        doc.text(title, (210 - titleWidth) / 2, 20)
+        doc.setFontSize(12)
+        doc.setFont('helvetica', 'normal')
+        doc.text(subtitle, (210 - subtitleWidth) / 2, 28)
+        yPosition = 45
+        doc.setFontSize(14)
+        doc.setFont('helvetica', 'bold')
+        doc.setTextColor(255, 255, 255)
+        doc.setFillColor(100, 100, 100)
+        doc.rect(10, yPosition - 5, 190, 10, 'F')
+        doc.text('Jersey Name', 15, yPosition + 2)
+        doc.text('Section', 85, yPosition + 2)
+        doc.text('Size', 155, yPosition + 2)
+        yPosition += 15
+        doc.setFontSize(12)
+        doc.setFont('helvetica', 'normal')
+        doc.setTextColor(0, 0, 0)
+      }
+    })
+
+    // Footer
+    const pageCount = doc.internal.getNumberOfPages()
+    for (let i = 1; i <= pageCount; i++) {
+      doc.setPage(i)
+      doc.setFontSize(10)
+      doc.setTextColor(150, 150, 150)
+      doc.text(`Page ${i} of ${pageCount}`, 10, 290)
+      doc.text('Badda Alatunnessa Higher Secondary School', 210 - doc.getTextWidth('Badda Alatunnessa Higher Secondary School') - 10, 290)
+    }
+
+    doc.save('jersey-orders.pdf')
+  }
+
 
 
   if (!isAuthenticated) {
@@ -249,6 +349,10 @@ export default function AdminPanel() {
               <div className="flex items-center justify-between">
                 <CardTitle>Orders ({filteredOrders.length} of {orders.length})</CardTitle>
                 <div className="flex items-center space-x-2">
+                  <Button onClick={downloadOrdersPDF} variant="outline">
+                    <Download className="h-4 w-4 mr-2" />
+                    Download PDF
+                  </Button>
                   <Label htmlFor="statusFilter">Filter by Status:</Label>
                   <Select value={statusFilter} onValueChange={handleStatusFilterChange}>
                     <SelectTrigger className="w-40">
