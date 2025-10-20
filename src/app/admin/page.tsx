@@ -22,6 +22,9 @@ interface JerseyOrder {
   size: string
   trxId: string
   paymentNumber: string
+  amountPaid: number
+  totalPrice: number
+  remainingPrice: number
   status: string
   createdAt: string
 }
@@ -47,6 +50,11 @@ export default function AdminPanel() {
     title: '',
     imageType: 'jersey',
     file: null as File | null
+  })
+  const [editingOrder, setEditingOrder] = useState<JerseyOrder | null>(null)
+  const [editForm, setEditForm] = useState({
+    amountPaid: '',
+    totalPrice: ''
   })
 
   useEffect(() => {
@@ -140,6 +148,32 @@ export default function AdminPanel() {
     } catch (error) {
       console.error('Error updating order status:', error)
     }
+  }
+
+  const updateOrderPayment = async (orderId: string, amountPaid: number, totalPrice: number) => {
+    try {
+      const response = await fetch(`/api/orders/${orderId}?password=M@ht@fadmin`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ amountPaid, totalPrice })
+      })
+
+      if (response.ok) {
+        await fetchOrders()
+        setEditingOrder(null)
+        setEditForm({ amountPaid: '', totalPrice: '' })
+      }
+    } catch (error) {
+      console.error('Error updating order payment:', error)
+    }
+  }
+
+  const openEditDialog = (order: JerseyOrder) => {
+    setEditingOrder(order)
+    setEditForm({
+      amountPaid: order.amountPaid?.toString() || '0',
+      totalPrice: order.totalPrice?.toString() || '0'
+    })
   }
 
   const deleteOrder = async (orderId: string) => {
@@ -382,7 +416,9 @@ export default function AdminPanel() {
                       <TableHead>Size</TableHead>
                       <TableHead>Transaction ID</TableHead>
                       <TableHead>Payment Number</TableHead>
-
+                      <TableHead>Amount Paid</TableHead>
+                      <TableHead>Total Price</TableHead>
+                      <TableHead>Remaining</TableHead>
                       <TableHead>Status</TableHead>
                       <TableHead>Date</TableHead>
                       <TableHead>Actions</TableHead>
@@ -434,7 +470,9 @@ export default function AdminPanel() {
                             </Button>
                           </div>
                         </TableCell>
-                        
+                        <TableCell>৳{order.amountPaid || 0}</TableCell>
+                        <TableCell>৳{order.totalPrice || 0}</TableCell>
+                        <TableCell>৳{order.remainingPrice || 0}</TableCell>
                         <TableCell>
                           <Select
                             value={order.status}
@@ -464,6 +502,13 @@ export default function AdminPanel() {
                         </TableCell>
                         <TableCell>
                           <div className="flex space-x-2">
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => openEditDialog(order)}
+                            >
+                              Edit Payment
+                            </Button>
                             <Button
                               variant="outline"
                               size="sm"
@@ -497,6 +542,61 @@ export default function AdminPanel() {
             </CardContent>
           </Card>
         </section>
+
+        {/* Edit Payment Dialog */}
+        <Dialog open={!!editingOrder} onOpenChange={() => setEditingOrder(null)}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Edit Payment Details</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4">
+              <div>
+                <Label htmlFor="amountPaid">Amount Paid (৳)</Label>
+                <Input
+                  id="amountPaid"
+                  type="number"
+                  value={editForm.amountPaid}
+                  onChange={(e) => setEditForm(prev => ({ ...prev, amountPaid: e.target.value }))}
+                  placeholder="Enter amount paid"
+                />
+              </div>
+              <div>
+                <Label htmlFor="totalPrice">Total Price (৳)</Label>
+                <Input
+                  id="totalPrice"
+                  type="number"
+                  value={editForm.totalPrice}
+                  onChange={(e) => setEditForm(prev => ({ ...prev, totalPrice: e.target.value }))}
+                  placeholder="Enter total price"
+                />
+              </div>
+              <div>
+                <Label>Remaining Price (৳)</Label>
+                <p className="text-lg font-semibold">
+                  ৳{(parseFloat(editForm.totalPrice) || 0) - (parseFloat(editForm.amountPaid) || 0)}
+                </p>
+              </div>
+              <div className="flex space-x-2">
+                <Button
+                  onClick={() => {
+                    if (editingOrder) {
+                      updateOrderPayment(
+                        editingOrder.id,
+                        parseFloat(editForm.amountPaid) || 0,
+                        parseFloat(editForm.totalPrice) || 0
+                      )
+                    }
+                  }}
+                >
+                  Update Payment
+                </Button>
+                <Button variant="outline" onClick={() => setEditingOrder(null)}>
+                  Cancel
+                </Button>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
 
         {/* Image Management Section */}
         <section>

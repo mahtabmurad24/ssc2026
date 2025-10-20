@@ -18,18 +18,38 @@ export async function PATCH(
     }
 
     const body = await request.json()
-    const { status } = body
+    const { status, amountPaid, totalPrice } = body
 
-    if (!status) {
+    if (!status && amountPaid === undefined && totalPrice === undefined) {
       return NextResponse.json(
-        { error: 'Status is required' },
+        { error: 'At least one field (status, amountPaid, or totalPrice) is required' },
         { status: 400 }
       )
     }
 
+    const updateData: any = {}
+    if (status) updateData.status = status
+    if (amountPaid !== undefined) updateData.amountPaid = amountPaid
+    if (totalPrice !== undefined) updateData.totalPrice = totalPrice
+
+    // Calculate remaining price if both amountPaid and totalPrice are provided
+    if (amountPaid !== undefined && totalPrice !== undefined) {
+      updateData.remainingPrice = totalPrice - amountPaid
+    } else if (amountPaid !== undefined || totalPrice !== undefined) {
+      // If only one is updated, fetch current values to recalculate
+      const currentOrder = await db.jerseyOrder.findUnique({
+        where: { id: params.id }
+      })
+      if (currentOrder) {
+        const currentAmountPaid = amountPaid !== undefined ? amountPaid : currentOrder.amountPaid || 0
+        const currentTotalPrice = totalPrice !== undefined ? totalPrice : currentOrder.totalPrice || 0
+        updateData.remainingPrice = currentTotalPrice - currentAmountPaid
+      }
+    }
+
     const order = await db.jerseyOrder.update({
       where: { id: params.id },
-      data: { status }
+      data: updateData
     })
 
     return NextResponse.json(order)

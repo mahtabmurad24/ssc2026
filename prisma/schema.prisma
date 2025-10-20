@@ -27,6 +27,9 @@ model JerseyOrder {
   location     String?
   customLocation String?
   kitVote      String?
+  amountPaid   Float?  @default(0)
+  totalPrice   Float?  @default(0)
+  remainingPrice Float? @default(0)
   status       String   @default("pending")
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
