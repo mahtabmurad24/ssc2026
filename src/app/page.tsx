@@ -28,7 +28,8 @@ export default function Home() {
     trxId: '',
     paymentNumber: '',
     location: '',
-    customLocation: ''
+    customLocation: '',
+    jerseyColor: 'Blue'
   })
 
   const [paymentMethod, setPaymentMethod] = useState<'bkash' | 'cash' | null>(null)
@@ -62,7 +63,20 @@ export default function Home() {
   }
 
   const handleInputChange = (field: string, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }))
+    if (field === 'jerseyColor') {
+      if (value === 'Blue') {
+        alert('Blue is the official color most students select!')
+      } else if (value === 'Green') {
+        alert('Green is the official color most students select!')
+      }
+      setFormData(prev => ({
+        ...prev,
+        [field]: value,
+        jerseyName: prev.jerseyName.replace(/(\s*(Blue|Green))?$/, '') + ' ' + value
+      }))
+    } else {
+      setFormData(prev => ({ ...prev, [field]: value }))
+    }
     if (errors[field]) {
       setErrors(prev => ({ ...prev, [field]: '' }))
     }
@@ -121,7 +135,8 @@ export default function Home() {
           trxId: '',
           paymentNumber: '',
           location: '',
-          customLocation: ''
+          customLocation: '',
+          jerseyColor: 'Blue'
         })
         setPaymentMethod(null)
       } else {
@@ -231,12 +246,25 @@ export default function Home() {
                     </div>
 
                     <div>
-                      <Label htmlFor="jerseyName">Jersey Name</Label>
+                      <Label htmlFor="jerseyName">Jersey Back Name</Label>
                       <Input
                         id="jerseyName"
                         value={formData.jerseyName}
                         onChange={(e) => handleInputChange('jerseyName', e.target.value)}
                       />
+                    </div>
+
+                    <div>
+                      <Label htmlFor="jerseyColor">Jersey Color *</Label>
+                      <select
+                        id="jerseyColor"
+                        value={formData.jerseyColor}
+                        onChange={(e) => handleInputChange('jerseyColor', e.target.value)}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      >
+                        <option value="Blue">Blue</option>
+                        <option value="Green">Green</option>
+                      </select>
                     </div>
 
                     <div>
@@ -332,15 +360,15 @@ export default function Home() {
                         <div className="space-y-4">
                           <div className="flex items-center justify-between">
                             <div>
-                              <p className="font-semibold">Jersey Price: 295 TK</p>
-                              <p className="text-sm text-gray-600">Advance Payment: 150 TK</p>
+                              <p className="font-semibold">Jersey Price: 300 TK</p>
+                              <p className="text-sm text-gray-600">Advance Payment: 300 TK</p>
                             </div>
                             <img src="/bkash-logo.png" alt="bKash" className="h-12" />
                           </div>
 
                           <div>
                             <p className="font-medium mb-2">bKash Number: +880 1891-979095</p>
-                            <p className="text-sm text-gray-600">Please send 150 TK to the above number and provide the transaction details below.</p>
+                            <p className="text-sm text-gray-600">Please send 300 TK to the above number and provide the transaction details below.</p>
                           </div>
 
                           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -377,8 +405,8 @@ export default function Home() {
                         <h4 className="text-md font-semibold mb-4">Cash Payment Details</h4>
                         <div className="space-y-4">
                           <div>
-                            <p className="font-semibold">Advance Payment Amount: 150 TK</p>
-                            <p className="text-sm text-gray-600">Please pay 150 TK in cash at the selected location.</p>
+                            <p className="font-semibold">Advance Payment Amount: 300 TK</p>
+                            <p className="text-sm text-gray-600">Please pay 300 TK in cash at the selected location.</p>
                           </div>
 
                           <div>
