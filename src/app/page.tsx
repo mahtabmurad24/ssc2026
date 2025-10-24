@@ -64,15 +64,13 @@ export default function Home() {
 
   const handleInputChange = (field: string, value: string) => {
     if (field === 'jerseyColor') {
-      if (value === 'Blue') {
-        alert('Blue is the official color most students select!')
-      } else if (value === 'Green') {
+      if (value === 'Green') {
         alert('Green is the official color most students select!')
       }
       setFormData(prev => ({
         ...prev,
         [field]: value,
-        jerseyName: prev.jerseyName.replace(/(\s*(Blue|Green))?$/, '') + ' ' + value
+        jerseyName: prev.jerseyName.replace(/\s*\([^)]*\)$/, '') + '(' + value + ')'
       }))
     } else {
       setFormData(prev => ({ ...prev, [field]: value }))
