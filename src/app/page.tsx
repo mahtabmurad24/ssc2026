@@ -32,6 +32,8 @@ export default function Home() {
     jerseyColor: 'Blue'
   })
 
+  const [baseJerseyName, setBaseJerseyName] = useState('')
+
   const [paymentMethod, setPaymentMethod] = useState<'bkash' | 'cash' | null>(null)
 
   const [errors, setErrors] = useState<Record<string, string>>({})
@@ -70,7 +72,13 @@ export default function Home() {
       setFormData(prev => ({
         ...prev,
         [field]: value,
-        jerseyName: prev.jerseyName.replace(/\s*\([^)]*\)$/, '') + '(' + value + ')'
+        jerseyName: baseJerseyName + '(' + value + ')'
+      }))
+    } else if (field === 'jerseyName') {
+      setBaseJerseyName(value)
+      setFormData(prev => ({
+        ...prev,
+        [field]: value + '(' + prev.jerseyColor + ')'
       }))
     } else {
       setFormData(prev => ({ ...prev, [field]: value }))
@@ -136,6 +144,7 @@ export default function Home() {
           customLocation: '',
           jerseyColor: 'Blue'
         })
+        setBaseJerseyName('')
         setPaymentMethod(null)
       } else {
         throw new Error('Failed to submit order')
@@ -247,9 +256,13 @@ export default function Home() {
                       <Label htmlFor="jerseyName">Jersey Back Name</Label>
                       <Input
                         id="jerseyName"
-                        value={formData.jerseyName}
+                        value={baseJerseyName}
                         onChange={(e) => handleInputChange('jerseyName', e.target.value)}
+                        placeholder="Enter jersey name"
                       />
+                      {formData.jerseyName && (
+                        <p className="text-sm text-gray-600 mt-1">Preview: {formData.jerseyName}</p>
+                      )}
                     </div>
 
                     <div>
