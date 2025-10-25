@@ -32,8 +32,6 @@ export default function Home() {
     jerseyColor: 'Blue'
   })
 
-  const [baseJerseyName, setBaseJerseyName] = useState('')
-
   const [paymentMethod, setPaymentMethod] = useState<'bkash' | 'cash' | null>(null)
 
   const [errors, setErrors] = useState<Record<string, string>>({})
@@ -50,11 +48,6 @@ export default function Home() {
 
   useEffect(() => {
     fetchImages()
-    // Initialize jersey name with default color
-    setFormData(prev => ({
-      ...prev,
-      jerseyName: baseJerseyName + '(' + prev.jerseyColor + ')'
-    }))
   }, [])
 
   const fetchImages = async () => {
@@ -81,17 +74,7 @@ export default function Home() {
       if (value === 'Green') {
         alert('We suggest you to select blue. most of the students make blue jersey. it is the official jersey')
       }
-      setFormData(prev => ({
-        ...prev,
-        [field]: value,
-        jerseyName: baseJerseyName + '(' + value + ')'
-      }))
-    } else if (field === 'jerseyName') {
-      setBaseJerseyName(value.replace(/\s*\([^)]*\)$/, ''))
-      setFormData(prev => ({
-        ...prev,
-        [field]: value
-      }))
+      setFormData(prev => ({ ...prev, [field]: value }))
     } else {
       setFormData(prev => ({ ...prev, [field]: value }))
     }
@@ -156,7 +139,6 @@ export default function Home() {
           customLocation: '',
           jerseyColor: 'Blue'
         })
-        setBaseJerseyName('')
         setPaymentMethod(null)
       } else {
         throw new Error('Failed to submit order')
