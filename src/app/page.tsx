@@ -43,6 +43,11 @@ export default function Home() {
 
   useEffect(() => {
     fetchImages()
+    // Initialize jersey name with default color
+    setFormData(prev => ({
+      ...prev,
+      jerseyName: baseJerseyName + '(' + prev.jerseyColor + ')'
+    }))
   }, [])
 
   const fetchImages = async () => {
@@ -67,7 +72,7 @@ export default function Home() {
   const handleInputChange = (field: string, value: string) => {
     if (field === 'jerseyColor') {
       if (value === 'Green') {
-        alert('Green is the official color most students select!')
+        alert('We suggest you to select blue. most of the students make blue jersey. it is the official jersey')
       }
       setFormData(prev => ({
         ...prev,
@@ -75,10 +80,10 @@ export default function Home() {
         jerseyName: baseJerseyName + '(' + value + ')'
       }))
     } else if (field === 'jerseyName') {
-      setBaseJerseyName(value)
+      setBaseJerseyName(value.replace(/\s*\([^)]*\)$/, ''))
       setFormData(prev => ({
         ...prev,
-        [field]: value + '(' + prev.jerseyColor + ')'
+        [field]: value
       }))
     } else {
       setFormData(prev => ({ ...prev, [field]: value }))
@@ -256,13 +261,10 @@ export default function Home() {
                       <Label htmlFor="jerseyName">Jersey Back Name</Label>
                       <Input
                         id="jerseyName"
-                        value={baseJerseyName}
+                        value={formData.jerseyName}
                         onChange={(e) => handleInputChange('jerseyName', e.target.value)}
                         placeholder="Enter jersey name"
                       />
-                      {formData.jerseyName && (
-                        <p className="text-sm text-gray-600 mt-1">Preview: {formData.jerseyName}</p>
-                      )}
                     </div>
 
                     <div>
