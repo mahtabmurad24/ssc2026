@@ -283,7 +283,7 @@ export default function AdminPanel() {
         doc.rect(10, yPosition - 5, 190, 10, 'F')
       }
 
-      doc.text(order.jerseyName ? `${order.jerseyName}(${order.kitVote || 'Blue'})` : '-', 15, yPosition + 2)
+      doc.text(order.jerseyName ? `${order.jerseyName} (${order.kitVote || 'Blue'})` : '-', 15, yPosition + 2)
       doc.text(order.section, 85, yPosition + 2)
       doc.text(order.size, 155, yPosition + 2)
 
@@ -429,7 +429,7 @@ export default function AdminPanel() {
                     {filteredOrders.map((order) => (
                       <TableRow key={order.id}>
                         <TableCell className="font-medium">{order.name}</TableCell>
-                        <TableCell>{order.jerseyName ? `${order.jerseyName}(${order.kitVote || 'Blue'})` : '-'}</TableCell>
+                        <TableCell>{order.jerseyName ? `${order.jerseyName} (${order.kitVote || 'Blue'})` : '-'}</TableCell>
                         <TableCell>{order.class}</TableCell>
                         <TableCell>{order.section}</TableCell>
                         <TableCell>{order.mobileNumber}</TableCell>
