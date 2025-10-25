@@ -4,7 +4,7 @@ import { db } from '@/lib/db'
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { name, jerseyName, class: studentClass, section, mobileNumber, size, trxId, paymentNumber, paymentMethod, location, customLocation } = body
+    const { name, jerseyName, class: studentClass, section, mobileNumber, size, trxId, paymentNumber, paymentMethod, location, customLocation, jerseyColor } = body
 
     // Validate required fields
     if (!name || !studentClass || !section || !mobileNumber) {
@@ -56,6 +56,7 @@ export async function POST(request: NextRequest) {
         paymentMethod,
         location,
         customLocation,
+        kitVote: jerseyColor,
         status: 'pending'
       }
     })
