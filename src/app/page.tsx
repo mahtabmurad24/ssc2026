@@ -396,15 +396,15 @@ export default function Home() {
                         <div className="space-y-4">
                           <div className="flex items-center justify-between">
                             <div>
-                              <p className="font-semibold">Jersey Price: 300 TK</p>
-                              <p className="text-sm text-gray-600">Advance Payment: 300 TK</p>
+                              <p className="font-semibold">Jersey Price: 310 TK</p>
+                              <p className="text-sm text-gray-600">Advance Payment: 310 TK</p>
                             </div>
                             <img src="/bkash-logo.png" alt="bKash" className="h-12" />
                           </div>
 
                           <div>
                             <p className="font-medium mb-2">bKash Number: +880 1891-979095</p>
-                            <p className="text-sm text-gray-600">Please send 300 TK to the above number and provide the transaction details below.</p>
+                            <p className="text-sm text-gray-600">Please send 310 TK to the above number and provide the transaction details below.</p>
                           </div>
 
                           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -441,8 +441,8 @@ export default function Home() {
                         <h4 className="text-md font-semibold mb-4">Cash Payment Details</h4>
                         <div className="space-y-4">
                           <div>
-                            <p className="font-semibold">Advance Payment Amount: 300 TK</p>
-                            <p className="text-sm text-gray-600">Please pay 300 TK in cash at the selected location.</p>
+                            <p className="font-semibold">Advance Payment Amount: 310 TK</p>
+                            <p className="text-sm text-gray-600">Please pay 310 TK in cash at the selected location.</p>
                           </div>
 
                           <div>
