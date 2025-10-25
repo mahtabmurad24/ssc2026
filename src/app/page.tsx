@@ -40,6 +40,13 @@ export default function Home() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [jerseyImages, setJerseyImages] = useState<JerseyImage[]>([])
   const [loading, setLoading] = useState(true)
+  const [isReportDialogOpen, setIsReportDialogOpen] = useState(false)
+  const [reportFormData, setReportFormData] = useState({
+    name: '',
+    email: '',
+    description: ''
+  })
+  const [isReporting, setIsReporting] = useState(false)
 
   useEffect(() => {
     fetchImages()
@@ -169,6 +176,40 @@ export default function Home() {
       alert('Failed to submit order. Please try again or contact us.')
     } finally {
       setIsSubmitting(false)
+    }
+  }
+
+  const handleReportSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+
+    setIsReporting(true)
+
+    try {
+      const response = await fetch('https://formspree.io/f/manpdaan', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          ...reportFormData,
+          type: 'manual_error_report',
+          timestamp: new Date().toISOString()
+        })
+      })
+
+      if (response.ok) {
+        alert('Error report submitted successfully! Thank you for your feedback.')
+        setReportFormData({
+          name: '',
+          email: '',
+          description: ''
+        })
+        setIsReportDialogOpen(false)
+      } else {
+        throw new Error('Failed to submit error report')
+      }
+    } catch (error) {
+      alert('Failed to submit error report. Please try again.')
+    } finally {
+      setIsReporting(false)
     }
   }
 
@@ -502,6 +543,59 @@ export default function Home() {
               <Phone className="h-5 w-5 sm:h-6 sm:w-6" />
               <span className="font-medium text-sm sm:text-base">+880 1891-979095</span>
             </a>
+          </div>
+
+          <div className="mt-6">
+            <Dialog open={isReportDialogOpen} onOpenChange={setIsReportDialogOpen}>
+              <DialogTrigger asChild>
+                <Button variant="outline" className="bg-red-50 border-red-200 text-red-700 hover:bg-red-100">
+                  Report an Error
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-md">
+                <div className="space-y-4">
+                  <h3 className="text-lg font-semibold">Report an Error</h3>
+                  <form onSubmit={handleReportSubmit} className="space-y-4">
+                    <div>
+                      <Label htmlFor="reportName">Name</Label>
+                      <Input
+                        id="reportName"
+                        value={reportFormData.name}
+                        onChange={(e) => setReportFormData(prev => ({ ...prev, name: e.target.value }))}
+                        placeholder="Your name"
+                        required
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="reportEmail">Email</Label>
+                      <Input
+                        id="reportEmail"
+                        type="email"
+                        value={reportFormData.email}
+                        onChange={(e) => setReportFormData(prev => ({ ...prev, email: e.target.value }))}
+                        placeholder="your.email@example.com"
+                        required
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="reportDescription">Error Description</Label>
+                      <textarea
+                        id="reportDescription"
+                        value={reportFormData.description}
+                        onChange={(e) => setReportFormData(prev => ({ ...prev, description: e.target.value }))}
+                        placeholder="Describe the error you encountered..."
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        rows={4}
+                        required
+                      />
+                    </div>
+                    <Button type="submit" className="w-full" disabled={isReporting}>
+                      {isReporting ? 'Submitting...' : 'Submit Report'}
+                    </Button>
+                  </form>
+                </div>
+              </DialogContent>
+            </Dialog>
           </div>
         </section>
       </main>
