@@ -363,7 +363,7 @@ export default function Home() {
                         <option value="L">Large (L)</option>
                         <option value="XL">Extra Large (XL)</option>
                         <option value="XXL">Double Extra Large (XXL)</option>
-                        <option value="XXXL">Triple Extra Large (XXXL)</option>
+                        <option value="XXXL">Triple Extra Large (3XL)</option>
                       </select>
                     </div>
                   </div>
